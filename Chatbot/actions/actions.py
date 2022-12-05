@@ -10,6 +10,7 @@
 from typing import Any, Text, Dict, List
 import requests
 import json
+import logging
 #
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
@@ -29,7 +30,7 @@ from rasa_sdk.executor import CollectingDispatcher
 #         return []
 #
 class ActionValues():
-    URL='http://20.79.206.115:8000'
+    URL='http://20.79.206.115:8002'
 
     @staticmethod
     def get_messagetext (tracker: Tracker):
@@ -47,22 +48,26 @@ class ActionEvaluateBirthday(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         msg = tracker.latest_message
-        r = requests.get(ActionValues.URL + '/name?text=' + msg['text'])
+        r = requests.get(ActionValues.URL + '/api?text=' + msg['text'])
         reply = r.json()
 
         # TODO Do what you need, generate reply here; see the following important_values object for values you might need
 
-        important_values = {
-            'intent': msg['intent']['name'], 
-            'entities': msg['entities'],
-            'text': msg['text'],
-            'recognized_first_name': reply["First Name"],
-            'recognized_middle_name': reply["Middle Name"],
-            'recognized_last_name': reply["Last Name"],
-        }
+        # TODO call stardog
+
+        answer = ""
+
+        if len(reply["result"]) > 0 and (reply["result"][0]['FIRST_NAME'] != '' or reply["result"][0]['MIDDLE_NAME'] != '' or reply["result"][0]['LAST_NAME'] != ''):
+            answer = "I have recognized the following:"
+            for result in reply["result"]:
+                answer += f"\n - First Name: {result['FIRST_NAME']}; Middle Name: {result['MIDDLE_NAME']}; Last Name: {result['LAST_NAME']}"
+        else:
+            answer = "I apologize; I could not recognize any name. Please ask me questions such as 'When was <Person> born?'. It helps me if you consider upper and lower case!"
+
+
 
         # This function must be used to return a response
-        dispatcher.utter_message(text=json.dumps(important_values))
+        dispatcher.utter_message(text=answer)
 
         return []
     
