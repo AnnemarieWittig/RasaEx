@@ -1,6 +1,8 @@
 #Rasa Gitignore
 #https://github.com/RasaHQ/rasa/blob/main/.gitignore
 
+results
+
 *~
 *pyc
 *.DS_Store
@@ -59,8 +61,6 @@ npm-debug.log
 examples/moodbot/py3/
 .python-version
 tokens.dat
-graph.png
-graph.html
 story_graph.html
 story_graph.dot
 debug.md

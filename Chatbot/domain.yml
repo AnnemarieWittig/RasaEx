@@ -21,6 +21,12 @@ responses:
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
 
+  utter_default:
+  - text: "I apologize, I did not understand your message. You can ask me messages such as 'What is Angela Merkels birthday?'"
+  - text: "Excuse me, but I am unsure what was asked. You can ask me messages such as 'When was Barack Obama born?'"
+  - text: "I don't understand your question. You can ask me questions such as 'Is it Marilyn Monroes day of birth?'"
+  - text: "I apologize for not understanding. I am here to answer questions about birthdays of people!"
+
 actions: 
   - action_evaluate_birthday
 
